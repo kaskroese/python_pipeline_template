@@ -1,0 +1,30 @@
+# Example pipeline configuration
+# Define your pipeline steps here. Each step has a name and a configuration.
+pipeline_steps:
+  step_1_ingest_raw_data:
+    type: data_ingestion
+    params:
+      output_path: "./data/raw/ingested_data.csv"
+      headers:
+        - id
+        - name
+        - value
+      rows:
+        - [1, "sample_record", 42]
+
+  step_2_clean_and_transform:
+    type: data_processing
+    params:
+      input_path: "./data/raw/ingested_data.csv"
+      output_path: "./data/processed/cleaned_data.csv"
+      operations:
+        - type: multiply
+          column: value
+          output: transformed_value
+          factor: 2
+
+  step_3_export_to_database:
+    type: data_export
+    params:
+      input_path: "./data/processed/cleaned_data.csv"
+      export_path: "./data/output/final_results.csv"
