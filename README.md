@@ -1,6 +1,6 @@
-# Python Data Pipeline Boilerplate
+# Python Data Pipeline template
 
-This project provides a boilerplate for a Python-based data pipeline with configurable steps and Docker support. It's designed to be a starting point for building robust and scalable data processing workflows.
+Welcome! This project is a template for a Python-based data pipeline with configurable steps including a working Dockerfile. It uses a pipeline logic for running your own Python building blocks.
 
 ## Features
 
