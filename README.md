@@ -135,34 +135,58 @@ This is where the core logic for executing steps resides.
 
 #### Adding New Step Types
 
-To add a new type of step (e.g., `model_training`):
+To add a new type of step (e.g., `model_training`), use the `register_step` decorator to register a handler function. This keeps your code modular and avoids editing `run_step`:
 
-1.  **Update `config.yaml`**: Add a new step with `type: model_training` and relevant `params`.
+1.  **Create a handler function** (in `helper_functions/pipeline_functions.py` or a separate module):
+    ```python
+    from helper_functions import register_step
+
+    @register_step("model_training")
+    def model_training(params):
+        """Handle model training steps.
+        
+        Expected params:
+            data_path: str - path to the data file
+            model_type: str - type of model (e.g., "RandomForest")
+            hyperparameters: dict - model hyperparameters
+        """
+        import logging
+        logger = logging.getLogger(__name__)
+        
+        data_path = params.get("data_path")
+        model_type = params.get("model_type", "RandomForest")
+        hyperparameters = params.get("hyperparameters", {})
+        
+        logger.info(f"Training {model_type} model with hyperparameters: {hyperparameters}")
+        
+        # Add your model training logic here
+        # Example:
+        # from sklearn.ensemble import RandomForestClassifier
+        # model = RandomForestClassifier(**hyperparameters)
+        # model.fit(load_data(data_path), load_labels())
+        
+        logger.info("Model training completed")
+    ```
+
+2.  **Update `config.yaml`**: Add a new step with `type: model_training` and relevant `params`.
     ```yaml
     # ...
     step_4_train_model:
       type: model_training
       params:
-        data_path: "./data/processed/cleaned_data.parquet"
+        data_path: "./data/processed/cleaned_data.csv"
         model_type: "RandomForest"
         hyperparameters:
           n_estimators: 100
           max_depth: 10
     ```
-2.  **Update `main.py`**: Add an `elif` block in the `run_step` function to handle the `model_training` type.
+
+3.  **Import the handler** in `main.py` (if it's in a separate module):
     ```python
-    def run_step(step_name, step_config):
-        # ... existing code ...
-        elif step_type == 'model_training':
-            logging.info(f"Performing model training with params: {params}")
-            # Add your model training logic here
-            # Example:
-            # from sklearn.ensemble import RandomForestClassifier
-            # model = RandomForestClassifier(**params.get('hyperparameters', {}))
-            # model.fit(load_data(params['data_path']), load_labels())
-            pass
-        # ... existing code ...
+    from helper_functions.pipeline_functions import model_training  # Triggers registration
     ```
+
+That's it! The `register_step` decorator automatically registers your handler with the `STEP_HANDLERS` registry, and `run_step` will find and execute it.
 
 ## Helper Functions
 
