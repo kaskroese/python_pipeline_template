@@ -96,7 +96,14 @@ def execute_sql(
             # For INSERT/UPDATE/DELETE queries
             connection.commit()
             rows_affected = cursor.rowcount
-            logger.info(f"SQL query executed successfully ({rows_affected} rows affected)")
+            if rows_affected is not None and rows_affected >= 0:
+                logger.info(f"SQL query executed successfully ({rows_affected} rows affected)")
+            else:
+                status_message = (getattr(cursor, "statusmessage", "") or "").strip()
+                if status_message:
+                    logger.info(f"SQL query executed successfully ({status_message})")
+                else:
+                    logger.info("SQL query executed successfully (row count unavailable)")
             return True
 
     except psycopg2.DatabaseError as e:

@@ -30,8 +30,11 @@ Each run overwrites the output files, making it safe to run the pipeline multipl
 ├── Pipfile                 # Python dependency management
 ├── Pipfile.lock            # Locked versions of dependencies
 ├── helper_functions/       # Reusable helper functions for pipeline steps
-│   ├── __init__.py         # Package initialization
-│   └── postgres_functions.py  # PostgreSQL database operations
+│   ├── __init__.py         # Package initialization + step registration
+│   ├── postgres_functions.py  # PostgreSQL database operations
+│   ├── schema_functions.py    # Versioned schema and latest-view helpers
+│   ├── json_functions.py      # JSON/GeoJSON/OGC download + PostgreSQL loaders
+│   └── pipeline_steps.py      # Generic step handlers for DB-backed pipelines
 ├── sql_examples/           # Example SQL files for database operations
 │   ├── create_table.sql    # Example: Create a table
 │   ├── select_data.sql     # Example: Select data
@@ -261,6 +264,16 @@ from helper_functions import close_connection
 
 close_connection(conn)
 ```
+
+### Schema and JSON/OGC Helpers
+
+The template also includes generic helpers for database-backed geospatial/data-ingestion pipelines:
+
+- `schema_functions.py`: versioned schema naming, schema lifecycle, PostGIS enablement, and "latest" schema views.
+- `json_functions.py`: robust JSON/GeoJSON and OGC API Features downloading, caching, and PostgreSQL loading with inferred column types.
+- `pipeline_steps.py`: pre-registered generic step handlers (`json_to_postgres`, `ogc_features_to_postgres`, `load_ogc_cache_to_postgres`, `sql_template_to_postgres`).
+
+These are imported via `helper_functions/__init__.py`, so their handlers are available to `run_step` automatically.
 
 ### Example Usage in Pipeline
 
