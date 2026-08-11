@@ -50,7 +50,7 @@ Each run overwrites the output files, making it safe to run the pipeline multipl
 
 ### Prerequisites
 
-*   Python 3.9+
+*   Python 3.14+
 *   pip (Python package installer)
 *   Docker (if you plan to run with Docker)
 
