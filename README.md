@@ -326,4 +326,3 @@ pipeline_steps:
 ## Environment Variables
 
 * **`PIPELINE_CONFIG`**: You can specify an alternative path to your configuration file by setting this environment variable.
-````
