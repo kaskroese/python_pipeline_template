@@ -327,6 +327,3 @@ pipeline_steps:
 
 * **`PIPELINE_CONFIG`**: You can specify an alternative path to your configuration file by setting this environment variable.
 ````
-<userPrompt>
-Provide the fully rewritten file, incorporating the suggested code change. You must produce the complete file.
-</userPrompt>
